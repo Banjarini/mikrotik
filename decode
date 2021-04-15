@@ -1,0 +1,25 @@
+# script to decode ussd response hex to ascii
+:global urlEncode do={
+  :local output ""
+  :local input [:toarray $1]
+  # if the input string is not empty
+  :if ([:len $input] > 0) do={
+    :local input1 [:tostr [:pick $input 0]]
+     # loop through selecting each hex character
+    :for i from=0 to=([:len $input1] - 1) step=2 do={
+      #select hex character 
+      :local char [:pick $input1 $i ($i+2)]
+      # hex to ascii conversion table
+      :local conversion {"20"=" ";"2E"=".";"2f"="/";"0a"=" ";"3a"=":";"30"="0";"31"="1";"32"="2";"33"="3";"34"="4";"35"="5";"36"="6";"37"="7";"38"="8";"39"="9";"2e"=".";"2d"="-";"41"="A";"42"="B";"43"="C";"44"="D";"45"="E";"46"="F";"47"="G";"48"="H";"49"="I";"4a"="J";"4b"="k";"4c"="L";"4d"="M";"4e"="N";"4f"="O";"50"="P";"51"="Q";"52"="R";"53"="S";"54"="T";"55"="U";"56"="V";"57"="W";"58"="X";"59"="Y";"5a"="Z";"61"="A";"62"="B";"63"="C";"64"="D";"65"="E";"66"="F";"67"="G";"68"="H";"69"="I";"6a"="J";"6b"="k";"6c"="L";"6d"="M";"6e"="N";"6f"="O";"70"="P";"71"="Q";"72"="R";"73"="S";"74"="T";"75"="U";"76"="V";"77"="W";"78"="X";"79"="Y";"7a"="Z"}
+      :foreach old,new in=$conversion do={
+        :if ($char=$old) do={
+          :set $char $new;
+        }
+      }
+      :set output ($output . $char)
+    }
+    :set output [:tostr $output]
+    :set output [:toarray $output]
+  }
+  :return $output
+}
